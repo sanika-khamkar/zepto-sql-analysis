@@ -1,0 +1,365 @@
+Enter password: ******
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 11
+Server version: 8.0.44 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2025, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> CREATE DATABASE zepto_sql_project;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| apnacollege        |
+| classicmodels      |
+| employee           |
+| information_schema |
+| mysql              |
+| performance_schema |
+| practice           |
+| sakila             |
+| sampledb           |
+| sys                |
+| test               |
+| testdb             |
+| testdml            |
+| testtcl            |
+| world              |
+| zepto_sql_project  |
++--------------------+
+16 rows in set (0.01 sec)
+
+mysql> use zepto_sql_project;
+Database changed
+mysql> CREATE TABLE zepto (
+    ->     sku_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     Category VARCHAR(120),
+    ->     name VARCHAR(150) NOT NULL,
+    ->     mrp DECIMAL(8,2),
+    ->     discountPercent DECIMAL(5,2),
+    ->     availableQuantity INT,
+    ->     discountedSellingPrice DECIMAL(8,2),
+    ->     weightInGms INT,
+    ->     outOfStock BOOLEAN,
+    ->     quantity INT
+    -> );
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> show tables;
++-----------------------------+
+| Tables_in_zepto_sql_project |
++-----------------------------+
+| zepto                       |
++-----------------------------+
+1 row in set (0.00 sec)
+
+mysql> SHOW VARIABLES LIKE 'secure_file_priv';
++------------------+------------------------------------------------+
+| Variable_name    | Value                                          |
++------------------+------------------------------------------------+
+| secure_file_priv | C:\ProgramData\MySQL\MySQL Server 8.0\Uploads\ |
++------------------+------------------------------------------------+
+1 row in set (0.04 sec)
+
+mysql> LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/zepto_v2.csv'
+    -> INTO TABLE zepto
+    -> CHARACTER SET utf8mb4
+    -> FIELDS TERMINATED BY ','
+    -> OPTIONALLY ENCLOSED BY '"'
+    -> LINES TERMINATED BY '\r\n'
+    -> IGNORE 1 ROWS
+    -> (Category, name, mrp, discountPercent, availableQuantity,
+    ->  discountedSellingPrice, weightInGms, @outOfStock, quantity)
+    -> SET outOfStock = (UPPER(@outOfStock) = 'TRUE');
+Query OK, 3732 rows affected (0.09 sec)
+Records: 3732  Deleted: 0  Skipped: 0  Warnings: 0
+
+mysql> SELECT COUNT(*) AS total_records
+    -> FROM zepto;
++---------------+
+| total_records |
++---------------+
+|          3732 |
++---------------+
+1 row in set (0.03 sec)
+
+mysql> SELECT *
+    -> FROM zepto
+    -> LIMIT 10;
++--------+---------------------+------------------+---------+-----------------+-------------------+------------------------+-------------+------------+----------+
+| sku_id | Category            | name             | mrp     | discountPercent | availableQuantity | discountedSellingPrice | weightInGms | outOfStock | quantity |
++--------+---------------------+------------------+---------+-----------------+-------------------+------------------------+-------------+------------+----------+
+|      1 | Fruits & Vegetables | Onion            | 2500.00 |           16.00 |                 3 |                2100.00 |        1000 |          0 |        1 |
+|      2 | Fruits & Vegetables | Tomato Hybrid    | 4200.00 |           16.00 |                 3 |                3500.00 |        1000 |          0 |        1 |
+|      3 | Fruits & Vegetables | Tender Coconut   | 5100.00 |           15.00 |                 3 |                4300.00 |          58 |          0 |        1 |
+|      4 | Fruits & Vegetables | Coriander Leaves | 2000.00 |           15.00 |                 3 |                1700.00 |         100 |          0 |      100 |
+|      5 | Fruits & Vegetables | Ladies Finger    | 1400.00 |           14.00 |                 3 |                1200.00 |         250 |          0 |      250 |
+|      6 | Fruits & Vegetables | Potato           | 3500.00 |           17.00 |                 3 |                2900.00 |        1000 |          0 |        1 |
+|      7 | Fruits & Vegetables | Lemon            | 7500.00 |           16.00 |                 3 |                6300.00 |         200 |          0 |      200 |
+|      8 | Fruits & Vegetables | Watermelon       | 5800.00 |           15.00 |                 3 |                4900.00 |          58 |          0 |        1 |
+|      9 | Fruits & Vegetables | Capsicum Green   | 2300.00 |           17.00 |                 3 |                1900.00 |         250 |          0 |      250 |
+|     10 | Fruits & Vegetables | Chilli Green     | 1900.00 |           15.00 |                 3 |                1600.00 |         100 |          0 |      100 |
++--------+---------------------+------------------+---------+-----------------+-------------------+------------------------+-------------+------------+----------+
+10 rows in set (0.00 sec)
+
+mysql> -- data exploration
+mysql> -- count of rows
+mysql> select count(*) from zepto;
++----------+
+| count(*) |
++----------+
+|     3732 |
++----------+
+1 row in set (0.10 sec)
+
+mysql> -- sample data
+mysql> select * from zepto limit 10;
++--------+---------------------+------------------+---------+-----------------+-------------------+------------------------+-------------+------------+----------+
+| sku_id | Category            | name             | mrp     | discountPercent | availableQuantity | discountedSellingPrice | weightInGms | outOfStock | quantity |
++--------+---------------------+------------------+---------+-----------------+-------------------+------------------------+-------------+------------+----------+
+|      1 | Fruits & Vegetables | Onion            | 2500.00 |           16.00 |                 3 |                2100.00 |        1000 |          0 |        1 |
+|      2 | Fruits & Vegetables | Tomato Hybrid    | 4200.00 |           16.00 |                 3 |                3500.00 |        1000 |          0 |        1 |
+|      3 | Fruits & Vegetables | Tender Coconut   | 5100.00 |           15.00 |                 3 |                4300.00 |          58 |          0 |        1 |
+|      4 | Fruits & Vegetables | Coriander Leaves | 2000.00 |           15.00 |                 3 |                1700.00 |         100 |          0 |      100 |
+|      5 | Fruits & Vegetables | Ladies Finger    | 1400.00 |           14.00 |                 3 |                1200.00 |         250 |          0 |      250 |
+|      6 | Fruits & Vegetables | Potato           | 3500.00 |           17.00 |                 3 |                2900.00 |        1000 |          0 |        1 |
+|      7 | Fruits & Vegetables | Lemon            | 7500.00 |           16.00 |                 3 |                6300.00 |         200 |          0 |      200 |
+|      8 | Fruits & Vegetables | Watermelon       | 5800.00 |           15.00 |                 3 |                4900.00 |          58 |          0 |        1 |
+|      9 | Fruits & Vegetables | Capsicum Green   | 2300.00 |           17.00 |                 3 |                1900.00 |         250 |          0 |      250 |
+|     10 | Fruits & Vegetables | Chilli Green     | 1900.00 |           15.00 |                 3 |                1600.00 |         100 |          0 |      100 |
++--------+---------------------+------------------+---------+-----------------+-------------------+------------------------+-------------+------------+----------+
+10 rows in set (0.02 sec)
+
+mysql> -- null values
+mysql> select * from zepto where name is null or category is null or mrp is null or discountpercent is null or availablequantity is null or discountedsellingprice is null or weightingms is null or outofstock is null or quantity is null;
+Empty set (0.01 sec)
+
+mysql> -- different product categories
+mysql> select distinct category from zepto order by category;
++-----------------------+
+| category              |
++-----------------------+
+| Beverages             |
+| Biscuits              |
+| Chocolates & Candies  |
+| Cooking Essentials    |
+| Dairy, Bread & Batter |
+| Fruits & Vegetables   |
+| Health & Hygiene      |
+| Home & Cleaning       |
+| Ice Cream & Desserts  |
+| Meats, Fish & Eggs    |
+| Munchies              |
+| Paan Corner           |
+| Packaged Food         |
+| Personal Care         |
++-----------------------+
+14 rows in set (0.03 sec)
+mysql> -- products in stock vs out of stock
+mysql> select outofstock, count(sku_id) from zepto group by outofstock;
++------------+---------------+
+| outofstock | count(sku_id) |
++------------+---------------+
+|          0 |          3279 |
+|          1 |           453 |
++------------+---------------+
+2 rows in set (0.01 sec)
+mysql> -- product names present_multiple times
+mysql> select name, count(sku_id) as "number of skus" from zepto group by name having count(sku_id) > 1 order by count(sku_id) desc;
++-------------------------------------------------------------------------------------------------+----------------+
+| name                                                                                            | number of skus |
++-------------------------------------------------------------------------------------------------+----------------+
+| Arden Eggs White                                                                                |             10 |
+| Saffola Veggie Twist Masala Oats                                                                |             10 |
+| Quaker Oats                                                                                     |             10 |
+| Sunfeast Yippee! Pasta Treat - Sour Cream Onion                                                 |             10 |
+| Sunfeast YiPPee! Magic Masala Noodles                                                           |             10 |
+| Mother's Recipe Tamarind Paste                                                                  |             10 |
+| Amul Delicious Fat Spread - Cholesterol Free                                                    |             10 |
+| Kellogg's Real Almond & Honey Corn Flakes                                                       |              9 |
+| Amul Fresh Cream                                                                                |              8 |
+| iD Idli & Dosa Batter                                                                           |              7 |
+| Everest Garam Masala                                                                            |              6 |
+| Everest Chicken Masala                                                                          |              6 |
+mysql> -- product names present_multiple times
+mysql> select name, count(sku_id) as "number of skus" from zepto group by name having count(sku_id) > 1 order by count(sku_id) desc limit 5;
++-------------------------------------------------+----------------+
+| name                                            | number of skus |
++-------------------------------------------------+----------------+
+| Arden Eggs White                                |             10 |
+| Saffola Veggie Twist Masala Oats                |             10 |
+| Quaker Oats                                     |             10 |
+| Sunfeast Yippee! Pasta Treat - Sour Cream Onion |             10 |
+| Sunfeast YiPPee! Magic Masala Noodles           |             10 |
++-------------------------------------------------+----------------+
+5 rows in set (0.01 sec)
+
+mysql> -- data cleaning
+mysql> -- products with price = 0
+mysql> select * from zepto
+    -> where mrp = 0 or discountedsellingprice = 0;
++--------+-----------------+--------------------------------------------+------+-----------------+-------------------+------------------------+-------------+------------+----------+
+| sku_id | Category        | name                                       | mrp  | discountPercent | availableQuantity | discountedSellingPrice | weightInGms | outOfStock | quantity |
++--------+-----------------+--------------------------------------------+------+-----------------+-------------------+------------------------+-------------+------------+----------+
+|   3607 | Home & Cleaning | Cherry Blossom Liquid Shoe Polish Neutral  | 0.00 |            0.00 |                 1 |                   0.00 |          75 |          0 |       75 |
++--------+-----------------+--------------------------------------------+------+-----------------+-------------------+------------------------+-------------+------------+----------+
+1 row in set (0.01 sec)
+
+mysql> delete from zepto where mrp = 0;
+Query OK, 1 row affected (0.06 sec)
+
+mysql> -- convert paise to rupees
+mysql> update zepto set mrp = mrp/100.0, discountedsellingprice = discountedsellingprice/100.0;
+Query OK, 3731 rows affected (0.07 sec)
+Rows matched: 3731  Changed: 3731  Warnings: 0
+
+mysql> select mrp, discountedsellingprice from zepto limit 10;
++-------+------------------------+
+| mrp   | discountedsellingprice |
++-------+------------------------+
+| 25.00 |                  21.00 |
+| 42.00 |                  35.00 |
+| 51.00 |                  43.00 |
+| 20.00 |                  17.00 |
+| 14.00 |                  12.00 |
+| 35.00 |                  29.00 |
+| 75.00 |                  63.00 |
+| 58.00 |                  49.00 |
+| 23.00 |                  19.00 |
+| 19.00 |                  16.00 |
++-------+------------------------+
+10 rows in set (0.00 sec)
+
+mysql> -- Find the top 10 best-value products based on the discount percentage.
+mysql> select distinct name, mrp, discountpercent from zepto order by discountpercent desc limit 10;
++------------------------------------------------+--------+-----------------+
+| name                                           | mrp    | discountpercent |
++------------------------------------------------+--------+-----------------+
+| Dukes Waffy Chocolate Wafers                   |  45.00 |           51.00 |
+| Dukes Waffy Orange Wafers                      |  45.00 |           51.00 |
+| Dukes Waffy Strawberry Wafers                  |  45.00 |           51.00 |
+| Ceres Foods Fish Mustard Instant Liquid Masala | 220.00 |           50.00 |
+| Ceres Foods Laal Maas Instant Liquid Masala    | 220.00 |           50.00 |
+| Ceres Foods Nalli Nihari Instant Liquid Masala | 220.00 |           50.00 |
+| Chef's Basket Durum Wheat Elbow Pasta          | 160.00 |           50.00 |
+| Chef's Basket Durum Wheat Fusilli Pasta        | 160.00 |           50.00 |
+| Chef's Basket Durum Wheat Penne Pasta          | 160.00 |           50.00 |
+| Dukes Waffy Chocolate Wafer Rolls              | 150.00 |           50.00 |
++------------------------------------------------+--------+-----------------+
+10 rows in set (0.01 sec)
+
+mysql> -- what are the products with high mrp but out of stock
+mysql> select distinct name, mrp from zepto where outofstock = true and mrp > 300 order by mrp desc;
++-----------------------------------------------------------+--------+
+| name                                                      | mrp    |
++-----------------------------------------------------------+--------+
+| Patanjali Cow's Ghee                                      | 565.00 |
+| MamyPoko Pants Standard Diapers, Extra Large (12 - 17 kg) | 399.00 |
+| Aashirvaad Atta With Mutigrains                           | 315.00 |
+| Everest Kashmiri Lal Chilli Powder                        | 310.00 |
++-----------------------------------------------------------+--------+
+4 rows in set (0.01 sec)
+mysql> -- Calculate Estimated Revenue for each category
+mysql> select category, sum(discountedsellingprice * availablequantity) as total_revenue from zepto group by category order by total_revenue;
++-----------------------+---------------+
+| category              | total_revenue |
++-----------------------+---------------+
+| Fruits & Vegetables   |      10846.00 |
+| Meats, Fish & Eggs    |      20693.00 |
+| Biscuits              |      25007.60 |
+| Dairy, Bread & Batter |      55051.00 |
+| Beverages             |      55051.00 |
+| Health & Hygiene      |      64180.00 |
+| Home & Cleaning       |     122661.00 |
+| Packaged Food         |     224385.00 |
+| Ice Cream & Desserts  |     224385.00 |
+| Chocolates & Candies  |     224385.00 |
+| Personal Care         |     270849.00 |
+| Paan Corner           |     270849.00 |
+| Cooking Essentials    |     337369.00 |
+| Munchies              |     337369.00 |
++-----------------------+---------------+
+14 rows in set (0.01 sec)
+
+mysql> -- Find all products where mrp is greater than Rs.500 and discount is less than 10%.
+mysql> select distinct name, mrp, discountpercent from zepto where mrp > 500 and discountpercent < 10 order by mrp desc, discountpercent desc;
++-------------------------------------------------------------------------------+---------+-----------------+
+| name                                                                          | mrp     | discountpercent |
++-------------------------------------------------------------------------------+---------+-----------------+
+| Dhara Kachi Ghani Mustard Oil Jar                                             | 1250.00 |            8.00 |
+| Saffola Gold (Jar)                                                            | 1240.00 |            0.00 |
+| Dhara Filtered Groundnut Oil (Jar)                                            | 1050.00 |            1.00 |
+| Fortune Rice Bran Health Oil (Jar)                                            | 1050.00 |            1.00 |
+| Dhara Filtered Groundnut Oil (Jar)                                            | 1050.00 |            0.00 |
+| Fortune Soyabean Oil                                                          | 1005.00 |            0.00 |
+| Fortune Sunlite Refined Sunflower (Jar)                                       |  925.00 |            0.00 |
+mysql> -- Identify the top 5 categories offering the highest average discount percentage.
+mysql> select category, round(avg(discountpercent),2) as avg_discount from zepto group by category order by avg_discount desc limit 5;
++----------------------+--------------+
+| category             | avg_discount |
++----------------------+--------------+
+| Fruits & Vegetables  |        15.46 |
+| Meats, Fish & Eggs   |        11.03 |
+| Chocolates & Candies |         8.32 |
+| Ice Cream & Desserts |         8.32 |
+| Packaged Food        |         8.32 |
++----------------------+--------------+
+5 rows in set (0.03 sec)
+
+mysql> -- Find the price per gram for products above 100g and sort by best value.
+mysql> select distinct name, weightingms,discountedsellingprice, discountedsellingprice/weightingms as price_per_gram from zepto where weightingms >= 100 order by price_per_gram;
++-------------------------------------------------------------------------------------------------+-------------+------------------------+----------------+
+| name                                                                                            | weightingms | discountedsellingprice | price_per_gram |
++-------------------------------------------------------------------------------------------------+-------------+------------------------+----------------+
+| Vicks Cough Drops Menthol                                                                       |        1160 |                  20.00 |       0.017241 |
+| Aashirvaad Iodised Salt                                                                         |        1000 |                  19.00 |       0.019000 |
+| Onion                                                                                           |        3000 |                  57.00 |       0.019000 |
+| Onion                                                                                           |        1000 |                  21.00 |       0.021000 |
+mysql> -- Find the price per gram for products above 100g and sort by best value.
+mysql> select distinct name, weightingms,discountedsellingprice, discountedsellingprice/weightingms as price_per_gram from zepto where weightingms >= 100 order by price_per_gram limit 5;
++---------------------------+-------------+------------------------+----------------+
+| name                      | weightingms | discountedsellingprice | price_per_gram |
++---------------------------+-------------+------------------------+----------------+
+| Vicks Cough Drops Menthol |        1160 |                  20.00 |       0.017241 |
+| Aashirvaad Iodised Salt   |        1000 |                  19.00 |       0.019000 |
+| Onion                     |        3000 |                  57.00 |       0.019000 |
+| Onion                     |        1000 |                  21.00 |       0.021000 |
+| Tata Salt                 |        1000 |                  24.00 |       0.024000 |
++---------------------------+-------------+------------------------+----------------+
+5 rows in set (0.03 sec)
+
+mysql> -- Group the products into categories like low, medium, bulk.
+mysql> select distinct name, weightingms, case when weightingms < 1000 then "low" when weightingms < 5000 then "medium" else "bulk" end as weight_category from zepto limit 5;
++------------------+-------------+-----------------+
+| name             | weightingms | weight_category |
++------------------+-------------+-----------------+
+| Onion            |        1000 | medium          |
+| Tomato Hybrid    |        1000 | medium          |
+| Tender Coconut   |          58 | low             |
+| Coriander Leaves |         100 | low             |
+| Ladies Finger    |         250 | low             |
++------------------+-------------+-----------------+
+5 rows in set (0.01 sec)
+
+mysql> -- what is the total inventory weight per category
+mysql> select category, sum(weightingms * availablequantity) as total_weight from zepto group by category order by total_weight limit 5;
++-----------------------+--------------+
+| category              | total_weight |
++-----------------------+--------------+
+| Meats, Fish & Eggs    |        48016 |
+| Biscuits              |        84431 |
+| Fruits & Vegetables   |        91794 |
+| Health & Hygiene      |       142904 |
+| Dairy, Bread & Batter |       143735 |
++-----------------------+--------------+
+5 rows in set (0.01 sec)
+
+mysql>
